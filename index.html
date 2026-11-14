@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bhavya's DeepSearch · Autonomous Deep Web Research Engine</title>
+  <link rel="icon" type="image/png" href="favicon.png?v=20260826_V600"><text y='.9em' font-size='90'>🌐</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=1787976937457">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <link rel="manifest" href="/manifest.json">
+</head>
+<body class="theme-deepsearch">
+  <!-- 3D WebGL Canvas Layer -->
+  <canvas id="webgl-canvas"></canvas>
+  <div class="cyber-scanlines"></div>
+  <div class="cyber-glow-orb orb-1"></div>
+  <div class="cyber-glow-orb orb-2"></div>
+  <div class="deepsearch-container">
+    <!-- Header -->
+    <header class="ds-header">
+      <div class="brand">
+        <div class="brand-icon"><img src="logo-3d.png?v=20260826_V600" class="brand-3d-logo-img" alt="Logo"></div>
+        <div>
+          <h2>BHAVYA'S DEEPSEARCH</h2>
+          <span class="sub-badge">AUTONOMOUS MULTI-HOP RESEARCH ENGINE</span>
+        </div>
+      </div>
+      <div class="header-links">
+        <button class="hdr-provider-btn" id="btnHeaderProvider">
+          <span id="hdrProviderIcon">🧠</span>
+          <span id="hdrProviderName">DeepSeek R1</span>
+          <span class="hdr-provider-badge">12 Providers</span>
+        </button>
+        <a href="https://bhavyas-synapse.vercel.app" class="hdr-link" target="_blank">🧠 Synapse Memory</a>
+        <a href="https://bhavyas-ai-hub.vercel.app" class="hdr-link" target="_blank">🌐 Master Hub</a>
+      </div>
+    </header>
+
+    <!-- Main Search Stage -->
+    <section class="search-hero" id="searchHeroSection">
+      <h1>Autonomous Deep Web Research</h1>
+      <p class="hero-sub">Enter any complex topic, industry question, or technical query. DeepSearch plans sub-queries, scrapes sources, cross-references facts, and synthesizes publication-grade reports across 12 premier AI research models.</p>
+
+      <div class="search-box-wrapper">
+        <textarea id="deepSearchInput" placeholder="What would you like DeepSearch to autonomously research? (e.g. 'Describe about Norton's Theorem in electrical engineering with formulas')"></textarea>
+        
+        <div class="search-controls">
+          <div class="controls-left">
+            <div class="provider-selector-wrap">
+              <span class="ctrl-label">AI Engine:</span>
+              <button class="provider-pill-btn" id="btnSelectProvider">
+                <span id="activeProviderIcon">🧠</span>
+                <span id="activeProviderName">DeepSeek R1 (Reasoning)</span>
+                <span class="chevron">▾</span>
+              </button>
+            </div>
+
+            <div class="depth-selector">
+              <span class="ctrl-label">Depth:</span>
+              <button class="depth-btn active" data-depth="standard">⚡ Fast</button>
+              <button class="depth-btn" data-depth="deep">🔬 Deep</button>
+              <button class="depth-btn" data-depth="comprehensive">🏛️ Exhaustive</button>
+            </div>
+          </div>
+
+          <button class="btn-launch-research" id="btnLaunchResearch">
+            <span>🚀</span> Launch Deep Research
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Topics -->
+      <div class="quick-topics">
+        <span class="quick-label">Trending Topics:</span>
+        <button class="topic-pill">Describe about Norton's Theorem</button>
+        <button class="topic-pill">Next-Gen AI Agents in 2026</button>
+        <button class="topic-pill">High-Throughput LPUs vs GPUs</button>
+        <button class="topic-pill">Quantum Key Distribution & Cryptography</button>
+      </div>
+    </section>
+
+    <!-- Realtime Progress Radar HUD -->
+    <section class="research-progress-hud" id="researchProgressHud" style="display: none;">
+      <div class="hud-header">
+        <div class="hud-title-col">
+          <div class="status-pulse-dot"></div>
+          <h3 id="hudCurrentPhaseText">Decomposing Research Goal into Sub-Queries...</h3>
+        </div>
+        <div class="hud-meta-right">
+          <span class="hud-provider-tag" id="hudProviderTag">🧠 DeepSeek R1</span>
+          <span class="hud-timer" id="hudTimer">00:00</span>
+        </div>
+      </div>
+
+      <!-- Progress Track -->
+      <div class="progress-track-wrapper">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+
+      <!-- Live Activities Log Grid -->
+      <div class="hud-grid">
+        <div class="hud-card">
+          <h4>📋 Sub-Queries Planned</h4>
+          <ul class="subquery-list" id="subqueryList">
+            <!-- Populated dynamically -->
+          </ul>
+        </div>
+
+        <div class="hud-card">
+          <h4>🛰️ Live Sources Inspected</h4>
+          <div class="sources-stream" id="sourcesStream">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <div class="hud-card">
+          <h4>💡 Extracted Research Facts</h4>
+          <div class="findings-stream" id="findingsStream">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Research Dossier View -->
+    <section class="report-view-container" id="reportViewContainer" style="display: none;">
+      <div class="report-header-bar">
+        <div>
+          <h2 id="reportTitle">Research Dossier Title</h2>
+          <div class="report-meta-row">
+            <span class="report-date-tag" id="reportDate">Completed in 8s · DEEP MODE</span>
+            <span class="report-engine-tag" id="reportEngineTag">🧠 DeepSeek R1 Powered</span>
+          </div>
+        </div>
+        <div class="report-actions">
+          <button class="action-btn" id="btnCopyReportMarkdown">📋 Copy Markdown</button>
+          <button class="action-btn" id="btnOpenSlides">📊 View Slides</button>
+          <button class="action-btn" id="btnDownloadReportPdf">📄 Download .pdf</button>
+          <button class="action-btn" id="btnSaveCollection" title="Save this research to a named collection">📌 Save to Collection</button>
+          <button class="action-btn" id="btnFactCheck" title="Fact-check every claim in this report with AI" onclick="runFactCheck()" style="color:#fbbf24;border-color:rgba(251,191,36,0.4);">🔍 Fact-Check</button>
+          <button class="action-btn" id="btnNotionExport" title="Export as Notion/Obsidian-ready Markdown" onclick="exportToNotion()" style="color:#a78bfa;border-color:rgba(167,139,250,0.4);">📓 Notion Export</button>
+          <button class="action-btn action-primary" id="btnNewSearch">🔍 New Research</button>
+        </div>
+      </div>
+
+      <!-- Markdown Report Output -->
+      <div class="report-card">
+        <div class="report-markdown-body" id="reportContentArea">
+          <!-- Rendered by Marked.js & KaTeX -->
+        </div>
+      </div>
+
+      <!-- Recent Dossiers Grid -->
+      <div class="recent-history-section">
+        <div class="history-header-row">
+          <h3>Recent Deep Research Dossiers</h3>
+          <button class="btn-clear-history" id="btnClearHistory" title="Clear all saved research dossiers"><span>🗑️</span> Clear History</button>
+        </div>
+        <div class="history-grid" id="historyGrid">
+          <!-- Populated from LocalStorage -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 12 AI Providers Selection Modal -->
+  <div class="provider-modal-overlay" id="providerModalOverlay">
+    <div class="provider-modal-card">
+      <div class="provider-modal-header">
+        <div class="provider-modal-title">
+          <span>⚡</span> Select Deep Research AI Engine
+        </div>
+        <button class="provider-modal-close" id="btnCloseProviderModal">✕</button>
+      </div>
+      <p class="provider-modal-sub">Choose from the top 12 frontier models selected specifically for autonomous multi-hop research, academic synthesis, and mathematical formulation.</p>
+      
+      <div class="provider-grid" id="providerGrid">
+        <!-- Generated dynamically in app.js?v=1787976937457"custom-key-section">
+        <div class="custom-key-header">
+          <span class="key-title">🔑 Custom Provider API Key (Optional)</span>
+          <span class="key-desc">Leave empty to use Bhavya's Smart Router tier automatically</span>
+        </div>
+        <div class="key-input-row">
+          <input type="password" id="customApiKeyInput" class="custom-key-input" placeholder="Paste your personal API key (stored securely in browser localStorage)...">
+          <button id="btnSaveApiKey" class="btn-save-key">Save Key</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three.js + Marked CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="background-3d.js?v=3.0.0"></script>
+  <script src="app.js?v=1787976937457"></script>
+  <script src="omni-palette.js?v=20260826_V600"></script>
+
+  <!-- Interactive 16:9 Presentation Slides Deck Modal -->
+  <div class="slides-modal-overlay" id="slidesModalOverlay" style="display: none;">
+    <div class="slides-modal-container">
+      <div class="slides-modal-header">
+        <div class="slides-header-left">
+          <span class="slides-brand-icon">📊</span>
+          <span class="slides-brand-title">Interactive 16:9 Presentation Slides</span>
+        </div>
+        <div class="slides-header-right">
+          <span class="slides-counter" id="slideCounter">Slide 1 of 1</span>
+          <button class="slides-close-btn" id="btnCloseSlides" title="Close Slides (Esc)">✕</button>
+        </div>
+      </div>
+
+      <div class="slides-viewport">
+        <div class="slide-deck-card" id="slideDeckCard">
+          <h1 class="slide-title" id="slideTitle">Overview</h1>
+          <div class="slide-content-body" id="slideContentBody"></div>
+        </div>
+      </div>
+
+      <div class="slides-footer">
+        <button class="slide-nav-btn" id="btnPrevSlide">◀ Previous</button>
+        <button class="slide-nav-btn slide-nav-next" id="btnNextSlide">Next ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./deepsearch-domains.js"></script>
+  <script src="./universal-ecosystem-hud.js"></script>
+
+  <!-- ── SAVE COLLECTION MODAL ── -->
+  <div id="collection-save-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#0a101e; border:1px solid rgba(0,240,255,0.3); border-radius:16px; padding:28px; max-width:420px; width:90%; box-shadow:0 0 40px rgba(0,240,255,0.15);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <h3 style="font-size:15px; color:#f0f4fc; font-family:'Space Grotesk',sans-serif;">📌 Save to Collection</h3>
+        <button onclick="document.getElementById('collection-save-modal').style.display='none'" style="background:none;border:none;color:#8899b5;cursor:pointer;font-size:18px;">✕</button>
+      </div>
+      <input id="collection-name-input" placeholder="Collection name (e.g. ML Research Oct 2026)" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(0,240,255,0.25);border-radius:8px;padding:10px 14px;color:#f0f4fc;font-size:13px;font-family:'JetBrains Mono',monospace;outline:none;margin-bottom:14px;">
+      <button onclick="confirmSaveCollection()" style="width:100%;background:linear-gradient(135deg,rgba(0,240,255,0.2),rgba(157,78,221,0.2));border:1px solid rgba(0,240,255,0.4);border-radius:8px;padding:12px;color:#00f0ff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;">📌 Save Collection</button>
+    </div>
+  </div>
+
+  <!-- ── COLLECTIONS BROWSER MODAL ── -->
+  <div id="collections-browser-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#0a101e; border:1px solid rgba(0,240,255,0.3); border-radius:16px; padding:28px; max-width:560px; width:90%; max-height:80vh; display:flex; flex-direction:column; box-shadow:0 0 40px rgba(0,240,255,0.15);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <h3 style="font-size:15px; color:#f0f4fc; font-family:'Space Grotesk',sans-serif;">🗂️ My Research Collections</h3>
+        <button onclick="document.getElementById('collections-browser-modal').style.display='none'" style="background:none;border:none;color:#8899b5;cursor:pointer;font-size:18px;">✕</button>
+      </div>
+      <div id="collections-list" style="flex:1;overflow-y:auto;"></div>
+    </div>
+  </div>
+</body>
+</html>
